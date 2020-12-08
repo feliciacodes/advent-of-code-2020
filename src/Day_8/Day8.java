@@ -16,25 +16,32 @@ public class Day8 {
         }
         in.close();
 
-        System.out.println(runInstructions(instructions)[0]);
+        int[] originalAccumulator = runInstructions(instructions);
+        System.out.println(originalAccumulator[0]);
 
-        int accumulator = 0;
-        for (int i = 0; i < instructions.size(); i++) {
-            String instruction = instructions.get(i);
-            String action = instruction.substring(0, 3);
-            if (action.equals("nop")) {
-                instructions.set(i, instruction.replace(action, "jmp"));
-            } else if (action.equals("jmp")) {
-                instructions.set(i, instruction.replace(action, "nop"));
+        if (originalAccumulator[1] == 1) {
+            System.out.println(originalAccumulator[0]);
+        } else {
+            int accumulator = 0;
+            for (int i = 0; i < instructions.size(); i++) {
+                String instruction = instructions.get(i);
+                String action = instruction.substring(0, 3);
+                if (action.equals("nop")) {
+                    instructions.set(i, instruction.replace(action, "jmp"));
+                } else if (action.equals("jmp")) {
+                    instructions.set(i, instruction.replace(action, "nop"));
+                } else if (action.equals("acc")) {
+                    continue;
+                }
+                int[] result = runInstructions(instructions);
+                if (result[1] == 1) {
+                    accumulator = result[0];
+                }
+                instructions.set(i, instruction);
             }
-            int[] result = runInstructions(instructions);
-            if (result[1] == 1) {
-                accumulator = result[0];
-            }
-            instructions.set(i, instruction);
+
+            System.out.println(accumulator);
         }
-
-        System.out.println(accumulator);
     }
 
     public static int[] runInstructions(ArrayList<String> instructions) {
